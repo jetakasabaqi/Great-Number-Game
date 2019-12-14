@@ -9,53 +9,23 @@
     <title>Great Number Game</title>
 </head>
 <body>
-    <main role="main" class="inner cover">
-        <h1 clas="cover-heading">Welcome to the Number Guessing Game</h1>
-        <p> I am guessing a number from 1 to 100.</p>
-        <p>Take a guess!</p>
-        <form action="/guess_number" method="POST">
-        <input class="form-control" type="number" name="guessed_number">
-        {% with errors = get_flashed_messages(category_filter=["error"]) %}
-        {% if errors %}
-        <div class="error">
-            {%- for msg in errors %}
-            <p>{{ msg }}</p>
-            {% endfor -%}
+    <main role="main" class="inner cover main-container">
+        <h1 clas="cover-heading">Welcome to the Great Number Game!</h1>
+        <p>I am thinking of a number between 1 and 100</p>
+        <div class="input-container {{ info['css_class'] }}">
+          <h2>{{ info['message'] }}</h2>
+          <h3>{{ session["tries"] }} guesses!</h3>
+          {% if session['guess'] == session['generated'] or session["tries"] > 4 %}
+            <a href="/reset" class="button button-primary">Play Again</a>
+          {% else %}
+            <form action="/process" method="post">
+              <input type="number" class="form-control" name="guessed_number" >
+              <button type='submit' name='reset' class="btn btn-warning"value='Reset'>Guess  
+            </form>
+          {% endif %}
         </div>
-        {% endif %}
-        {% endwith %}
-        {% if not successes %}
-        <button class= "btn btn-lg  btn-warning " type="submit">Submit</button>
-        {% endif %}
-    </form>
+    </main>   
 
-
-	{% with successes = get_flashed_messages(category_filter=["success"]) %}
-	{% if successes %}
-	<div class="success">
-		{%- for msg in successes %}
-		<p>{{ msg }}</p>
-		{% endfor -%}
-		<form action='/reset' method='post'>
-            <button type='submit' name='reset' class="btn btn-warning"value='Reset'>Reset
-		</form>
-	</div>
-	{% endif %}
-    {% endwith %}
-    
-    {% with game_losts = get_flashed_messages(category_filter=["game_lost"]) %}
-	{% if game_losts %}
-	<div class="error">
-		{%- for msg in game_losts %}
-		<p>{{ msg }}</p>
-		{% endfor -%}
-		<form action='/reset' method='post'>
-            <button type='submit' name='reset' class="btn btn-warning"value='Reset'>Reset
-		</form>
-	</div>
-	{% endif %}
-	{% endwith %}
-    </main>
-    <p>{{session['tries']}} tries.</p>
+     
 </body>
 </html>

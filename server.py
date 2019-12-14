@@ -6,33 +6,40 @@ app.secret_key = 'secretkey'
 
 @app.route('/')
 def index():
+    game_info = {
+        "message": None,
+        "css_class": None
+    }
     if 'generated' not in session:
         session['generated'] = random.randint(1,100)
-    else:
-        pass
     if "tries" not in session:
         session['tries'] = 0
-    if session['tries'] == 5:
-         flash('You lose', 'game_lost')
+        
+ 
+    if "guess" not in session:
+        game_info["message"] = "Take a guess!"
+        game_info['css_class'] = "yellow"
+    elif int(session['tries']) > 4:
+        game_info["message"] = "You lose!"
+        game_info["css_class"] = "red"
+    elif int(session["guess"] )> int(session["generated"]):
+        game_info["message"] = "Too high!"
+        game_info['css_class'] = "red"
+    elif int(session["guess"]) < int(session["generated"]):
+        game_info["message"] = "Too low!"
+        game_info['css_class'] = "red"
+    else:
+        game_info["message"] = f"{session['generated']} was the number!"
+        game_info['css_class'] = "green"
     
-    return render_template('index.html')
+    return render_template('index.html',info = game_info)
 
    
 
-@app.route('/guess_number', methods=['POST'])
+@app.route('/process', methods=['POST'])
 def create_user():
-    guess = request.form['guessed_number']
-    print(session['generated'])
-    if int(guess) == int(session['generated']):
-        flash('Correct', 'success')
-        return redirect('/')
-    elif int(guess) > int(session['generated']):
-        flash('Too high', 'error')
-    else:
-        flash('Too low', 'error')
- 
-    
-    session['tries'] = session['tries'] + 1
+    session['guess'] = request.form['guessed_number']    
+    session['tries'] += 1
     return redirect("/")
 
 @app.route('/reset', methods=['GET', 'POST'])
