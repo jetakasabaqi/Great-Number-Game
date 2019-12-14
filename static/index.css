@@ -25,18 +25,8 @@ p{
 button{
     margin-top: 20px;
 }
-.error{
-    background-color: red;
-    color: white;
-    padding: 25px;
-    margin: 10px;
-}
-.success{
-    background-color: green;
-    color: white;
-    padding: 25px;
-    margin: 10px;
-}
+
+
 
 .input-container {
     display: flex;
