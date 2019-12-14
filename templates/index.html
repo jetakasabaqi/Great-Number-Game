@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='index.css') }}">
+    <title>Great Number Game</title>
+</head>
+<body>
+    <main role="main" class="inner cover">
+        <h1 clas="cover-heading">Welcome to the Number Guessing Game</h1>
+        <p> I am guessing a number from 1 to 100.</p>
+        <p>Take a guess!</p>
+        <form action="/guess_number" method="POST">
+        <input class="form-control" type="number" name="guessed_number">
+        {% with errors = get_flashed_messages(category_filter=["error"]) %}
+        {% if errors %}
+        <div class="error">
+            {%- for msg in errors %}
+            <p>{{ msg }}</p>
+            {% endfor -%}
+        </div>
+        {% endif %}
+        {% endwith %}
+        {% if not successes %}
+        <button class= "btn btn-lg  btn-warning " type="submit">Submit</button>
+        {% endif %}
+    </form>
+
+
+	{% with successes = get_flashed_messages(category_filter=["success"]) %}
+	{% if successes %}
+	<div class="success">
+		{%- for msg in successes %}
+		<p>{{ msg }}</p>
+		{% endfor -%}
+		<form action='/reset' method='post'>
+            <button type='submit' name='reset' class="btn btn-warning"value='Reset'>Reset
+		</form>
+	</div>
+	{% endif %}
+    {% endwith %}
+    
+    {% with game_losts = get_flashed_messages(category_filter=["game_lost"]) %}
+	{% if game_losts %}
+	<div class="error">
+		{%- for msg in game_losts %}
+		<p>{{ msg }}</p>
+		{% endfor -%}
+		<form action='/reset' method='post'>
+            <button type='submit' name='reset' class="btn btn-warning"value='Reset'>Reset
+		</form>
+	</div>
+	{% endif %}
+	{% endwith %}
+    </main>
+    <p>{{session['tries']}} tries.</p>
+</body>
+</html>
